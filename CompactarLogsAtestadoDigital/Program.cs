@@ -1,6 +1,4 @@
 ﻿using System;
-using System.IO;
-using System.IO.Compression;
 
 namespace CompactarLogsAtestadoDigital
 {
@@ -8,32 +6,19 @@ namespace CompactarLogsAtestadoDigital
     {
         static void Main(string[] args)
         {
-            string pathFilesLogs;
+            if (args.Length == 0)
+            {
+                Console.WriteLine("É necessário informar paramentros de inicialização.");
+                Console.WriteLine("1º parametro: Local do Log");
+                Console.WriteLine("Exemplo: 'C:\\AtestadoDigital\\Log'");
+                Console.WriteLine("2º e 3º parametro opcional: para deletar os arquivos mais antigos");
+                Console.WriteLine("Exemplo: 'del 30' ira deletar os arquivos com mais de 30 dias");
+                Console.WriteLine("Exemplo Completo: 'C:\\AtestadoDigital\\Log del 30' ira compactar os arquivos e deletar os arquivos com mas de 30 dias");
 
-            // Verifica se tem o parametro de entra do log
-            if (args.Length > 0)
-            {
-                pathFilesLogs = args[0];
+                Console.ReadKey();
             }
-            else
-            {
-                return;
-            }
-            string zipPath = Path.Combine(pathFilesLogs, $@"{DateTime.Now:yyyy_MM} Logs Compentencia.zip");
-            var filesDirectory = Directory.GetFiles(pathFilesLogs, "*.txt", SearchOption.TopDirectoryOnly);
 
-            // Cria um arquivo zip vazio
-            using (FileStream zipToOpen = new FileStream(zipPath, FileMode.Create))
-            {
-                using (ZipArchive archive = new ZipArchive(zipToOpen, ZipArchiveMode.Create))
-                {
-                    foreach (var file in filesDirectory)
-                    {
-                        // Adiciona arquivos individualmente
-                        archive.CreateEntryFromFile(file, Path.GetFileName(file));
-                    }
-                }
-            }
+            ValidationArgs.Validation(args);
         }
     }
 }
